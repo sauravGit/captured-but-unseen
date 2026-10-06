@@ -1,0 +1,2 @@
+# Only needed for `python3 harness.py otel`. Everything else is standard library.
+opentelemetry-hooks==0.14.0
