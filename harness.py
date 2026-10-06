@@ -170,7 +170,8 @@ def run_hooks(bindir, work, scenarios):
             else:
                 _, name, inp, res = st
                 call("pre-tool", dict(common, hook_event_name="PreToolUse", tool_name=name, tool_input=inp))
-                # Claude Code's documented PostToolUse shape: tool_response carries the result under "content".
+                # Claude Code's hooks reference says tool_response's shape depends on the tool; the harness puts
+                # the result under "content", and findings were identical with the earlier "output" key.
                 call("post-tool", dict(common, hook_event_name="PostToolUse", tool_name=name,
                                        tool_input=inp, tool_response={"content": res}))
         call("stop", dict(common, hook_event_name="Stop"))

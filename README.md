@@ -37,7 +37,7 @@ fix.
 
 ## Read this before trusting the numbers
 
-- 44 of the 48 scenarios were written by the author and labeled by the author. This is a coverage map, not a
+- All 48 scenarios were labeled by the author, and the payloads of 46 were written by the author. This is a coverage map, not a
   benchmark. V01 and V02 use payload text copied from [AgentSec-Bench](https://github.com/Santhosraj/AgentSec-Bench)
   (see `THIRD_PARTY_NOTICES.md`); V03 and V04 are shortened versions of the same payloads plus the follow-up steps.
 - Nothing here runs a real agent. Each scenario is a scripted session transcript (poll mode) or a sequence of
@@ -83,10 +83,11 @@ python3 harness.py otel --out results/my-otel
 - `otel.json` covers 46 of the 48 scenarios. V03 and V04 were added after that run, and when I tried them later the
   tool's end-of-session step stalled for 40 seconds or more, even on plain text. I did not find out why, so those two
   are missing.
-- An early version of my live-mode driver put the tool result under the key `output`. Claude Code's documented key is
-  `content`. After fixing it I re-ran v1.3.29 with `harness.py` and got identical findings on all 48 scenarios in both
-  modes. The v1.3.31, v1.3.32 and source-build results were produced by earlier scripts with the same logic, before
-  everything was merged into `harness.py`.
+- An early version of my live-mode driver put the tool result under the key `output`. Claude Code's hooks reference
+  says the shape of `tool_response` depends on the tool; the harness puts the result under `content`, and findings
+  were identical with the earlier `output` key. After fixing it I re-ran v1.3.29 with `harness.py` and got identical
+  findings on all 48 scenarios in both modes. The v1.3.31, v1.3.32 and source-build results were produced by earlier
+  scripts with the same logic, before everything was merged into `harness.py`.
 - The scenarios contain fake credentials. The strings are split in the source so secret scanners don't flag them.
 
 ## Credits
