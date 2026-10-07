@@ -32,8 +32,7 @@ Everything below went to the Beacon maintainers as GitHub issues, and each got a
 
 I checked the last one by building Beacon from source at `383bd28` and re-running everything
 (`results/383bd28-source-build`): nothing regressed, and live mode now matches after-the-fact mode. At that time the
-newest tagged release, v1.3.32, had been built from the commit just before the merge, so it does not contain that
-fix.
+newest tagged release was v1.3.32, which does not contain that fix (383bd28 is not an ancestor of the v1.3.32 tag).
 
 ## Read this before trusting the numbers
 
@@ -80,9 +79,15 @@ python3 harness.py otel --out results/my-otel
 
 ## Notes on the data
 
-- `otel.json` covers 46 of the 48 scenarios. V03 and V04 were added after that run, and when I tried them later the
-  tool's end-of-session step stalled for 40 seconds or more, even on plain text. I did not find out why, so those two
-  are missing.
+- `otel.json` covers all 48 scenarios. An earlier run covered 46. V03 and V04 were missing because the tool's
+  end-of-session step stalled for 40 seconds or more. The cause was a default config the tool writes on first run, which
+  points at `http://localhost:4317`; with nothing listening, every Stop waits on retries. `harness.py otel` now seeds a
+  config with no endpoint. The 46 earlier results came out identical on the re-run.
+- If your shell has `TRACEPARENT` set with the sampled flag off, the tool honors it and records no spans, so the sweep
+  silently reports zero spans. `harness.py otel` clears it. This hit me inside a sandbox that sets it.
+- `command_credentials_check.py` is the small test behind the claim that credentials in command lines are not masked.
+  It writes three fake credentials as Bash commands and checks the local spans with and without
+  `IDE_OTEL_MASK_PROMPTS=true`.
 - An early version of my live-mode driver put the tool result under the key `output`. Claude Code's hooks reference
   says the shape of `tool_response` depends on the tool; the harness puts the result under `content`, and findings
   were identical with the earlier `output` key. After fixing it I re-ran v1.3.29 with `harness.py` and got identical

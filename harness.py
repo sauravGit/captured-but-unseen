@@ -297,9 +297,19 @@ def cmd_otel(a):
     env = dict(os.environ, HOME=str(work / "home"), IDE_OTEL_HOOK_HOME=str(work),
                IDE_OTEL_LOCAL_SPANS="true", IDE_OTEL_BATCH_ON_STOP="true", IDE_OTEL_IDE_NAME="claude",
                OTEL_TRACES_EXPORTER="none", OTEL_LOGS_EXPORTER="none", IDE_OTEL_DISABLE_BATCH="1")
-    for k in ("IDE_OTEL_CAPTURE_TEXT", "IDE_OTEL_DEBUG_CONSOLE"):
+    # An inherited TRACEPARENT with the sampled flag off makes the hook record no spans at all.
+    for k in ("IDE_OTEL_CAPTURE_TEXT", "IDE_OTEL_DEBUG_CONSOLE", "TRACEPARENT", "TRACESTATE"):
         env.pop(k, None)
     Path(env["HOME"]).mkdir(parents=True, exist_ok=True)
+    # On first run the hook writes a config that points at http://localhost:4317. With nothing listening,
+    # the Stop hook stalls for 40s or more. Seed a config with no endpoint so only local spans are written.
+    import importlib.metadata as _md
+    _ex = [f for f in (_md.files("opentelemetry-hooks") or []) if f.name == "otel_config.example.json"]
+    if _ex:
+        cfg = json.load(open(_ex[0].locate()))
+        cfg["OTEL_EXPORTER_OTLP_ENDPOINT"] = None
+        cfg["IDE_OTEL_ENABLE_LOGS"] = "false"
+        (work / "otel_config.json").write_text(json.dumps(cfg))
 
     def call(payload):
         subprocess.run([exe], input=json.dumps(payload), env=env, capture_output=True, text=True, timeout=240)
