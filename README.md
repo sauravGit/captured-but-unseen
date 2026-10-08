@@ -1,5 +1,7 @@
 # captured-but-unseen
 
+[![DOI](https://zenodo.org/badge/1406594771.svg)](https://doi.org/10.5281/zenodo.23227402)
+
 Test harness and raw results for a short paper in preparation, *Captured but Unseen: A Content-Visibility Gap in
 Endpoint Security Telemetry for AI Coding Agents*.
 
