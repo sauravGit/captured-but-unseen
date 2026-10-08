@@ -88,6 +88,7 @@ python3 harness.py otel --out results/my-otel
 - `command_credentials_check.py` is the small test behind the claim that credentials in command lines are not masked.
   It writes three fake credentials as Bash commands and checks the local spans with and without
   `IDE_OTEL_MASK_PROMPTS=true`.
+I reported it upstream: https://github.com/o11y-dev/opentelemetry-hooks/issues/97 (opened 7 Oct 2026).
 - An early version of my live-mode driver put the tool result under the key `output`. Claude Code's hooks reference
   says the shape of `tool_response` depends on the tool; the harness puts the result under `content`, and findings
   were identical with the earlier `output` key. After fixing it I re-ran v1.3.29 with `harness.py` and got identical
