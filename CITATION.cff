@@ -4,7 +4,7 @@ title: "captured-but-unseen: test harness and raw results"
 authors:
   - family-names: Paul
     given-names: Saurav
-version: 1.0.1
-date-released: 2026-10-07
+version: 1.0.2
+date-released: 2026-10-12
 license: MIT
 repository-code: "https://github.com/sauravGit/captured-but-unseen"
