@@ -24,17 +24,17 @@ does it go blind? This repo runs 48 scripted scenarios through both and keeps th
 ## Disclosure and fixes
 
 Everything below went to the Beacon maintainers as GitHub issues, and each got a draft fix the same day. Status as of
-5 October 2026; check the links for anything newer.
+9 October 2026; check the links for anything newer.
 
 | Issue | Fix | What it was |
 |---|---|---|
 | [#700](https://github.com/Asymptote-Labs/agent-beacon/issues/700) | [#702](https://github.com/Asymptote-Labs/agent-beacon/pull/702), in v1.3.31 | no rule field for tool-result text |
 | [#701](https://github.com/Asymptote-Labs/agent-beacon/issues/701) | [#703](https://github.com/Asymptote-Labs/agent-beacon/pull/703), in v1.3.31 | correlation rule depended on step order |
-| [#743](https://github.com/Asymptote-Labs/agent-beacon/issues/743) | [#744](https://github.com/Asymptote-Labs/agent-beacon/pull/744), commit `383bd28` | the #702 fix did not work in live `beacon-hooks` mode |
+| [#743](https://github.com/Asymptote-Labs/agent-beacon/issues/743) | [#744](https://github.com/Asymptote-Labs/agent-beacon/pull/744), commit `383bd28`, in v1.3.33 | the #702 fix did not work in live `beacon-hooks` mode |
 
-I checked the last one by building Beacon from source at `383bd28` and re-running everything
-(`results/383bd28-source-build`): nothing regressed, and live mode now matches after-the-fact mode. At that time the
-newest tagged release was v1.3.32, which does not contain that fix (383bd28 is not an ancestor of the v1.3.32 tag).
+The fix shipped in v1.3.33 (7 Oct 2026). I re-ran the released binaries (`results/v1.3.33`) and got the same results as
+the source build: 18/33 attacks and 5/15 benign controls with a finding, poll and hooks identical on 48/48 scenarios,
+no finding lost against v1.3.29.
 
 ## Read this before trusting the numbers
 
@@ -52,11 +52,14 @@ newest tagged release was v1.3.32, which does not contain that fix (383bd28 is n
 ```
 scenarios.py        the 48 scenarios (33 attack, 15 benign)
 harness.py          fetch / run / summary / diff / otel
+PROVENANCE.md       binary and rule-pack hashes, environment and date of each run
 results/
   v1.3.29/                  poll.json, hooks.json   (re-run with harness.py)
   v1.3.31/ v1.3.32/         poll.json, hooks.json
+  v1.3.33/ v1.3.37/         poll.json, hooks.json
   383bd28-source-build/     poll.json, hooks.json
   otel-hooks-0.14.0/        otel.json
+  otel-hooks-0.15.0/        otel.json
 ```
 
 ## Running it
